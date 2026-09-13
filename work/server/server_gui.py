@@ -1,5 +1,5 @@
 """
-Project Bracky -- the game server's own window.
+Bracky -- the game server's own window.
 
 Replaces the old black console: same look as PoGO-Manager (clam theme, labelled
 sections, status dots, dark activity pane), branded Bracky. The server itself
@@ -426,7 +426,7 @@ class ServerWindow:
         self.server_alive = True
         self._images = []                      # keep PhotoImages alive
 
-        root.title("Project Bracky \u2014 Pok\u00e9mon GO Server")
+        root.title("Bracky \u2014 Pok\u00e9mon GO Server")
         root.geometry("860x680")
         root.minsize(720, 540)
         self._set_icon()
@@ -473,12 +473,10 @@ class ServerWindow:
         # header banner
         head = tk.Frame(self.root, bg="white", highlightthickness=0)
         head.pack(fill="x")
-        mark = self._img("bracky_mark.png")
-        if mark:
-            tk.Label(head, image=mark, bg="white").pack(side="left", padx=(10, 8), pady=6)
+        # No logo mark: the name is the brand, set as plain text.
         titles = tk.Frame(head, bg="white")
-        titles.pack(side="left", pady=6)
-        self.title_lbl = tk.Label(titles, text="PROJECT BRACKY", bg="white", fg=BLUE,
+        titles.pack(side="left", padx=(14, 8), pady=6)
+        self.title_lbl = tk.Label(titles, text="BRACKY", bg="white", fg=BLUE,
                                   font=("Segoe UI", 18, "bold"))
         self.title_lbl.pack(anchor="w")
         tk.Label(titles, text="Pok\u00e9mon GO 0.29 / 0.35 private server",

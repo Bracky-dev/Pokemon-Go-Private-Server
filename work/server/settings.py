@@ -280,7 +280,7 @@ DEFAULTS = {
         # false. Default false = the proven JSON login. Test on a throwaway account.
         "custom_login_page": False,
         # How the server shows itself when you start the exe:
-        #   "bracky" = the Project Bracky window (status, activity, buttons)
+        #   "bracky" = the Bracky window (status, activity, buttons)
         #   "console"   = the old plain black console window, raw text only
         # Takes effect the NEXT time the server is started.
         "window": "bracky",

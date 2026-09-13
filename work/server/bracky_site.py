@@ -1,5 +1,5 @@
 """
-The public Project Bracky website, served by the game server itself.
+The public Bracky website, served by the game server itself.
 
 Why here rather than a separate static host: the status page has to fetch a health
 endpoint, and a browser blocks that cross-origin unless the endpoint sends CORS
@@ -44,7 +44,7 @@ def handle(method, path, query, headers, body, log):
     if path == "/api/health":
         out = json.dumps({
             "ok": True,
-            "service": "project-bracky",
+            "service": "bracky",
             "uptime_seconds": int(time.time() - _STARTED),
             "time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }).encode()

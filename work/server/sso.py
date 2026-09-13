@@ -26,7 +26,7 @@ CALLBACK = "https://sso.pokemon.com/sso/oauth2.0/callback"
 
 # ---- branding for the webview login page (a patched client points its login
 # webview at /sso/login; the stock client still gets the JSON flow below) -------
-BRAND_NAME = "Project Bracky"
+BRAND_NAME = "Bracky"
 BRAND_TAGLINE = "Welcome to Kanto"
 PRIVACY_URL = "/sso/privacy"           # served below; repoint to your site later
 

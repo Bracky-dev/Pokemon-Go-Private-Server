@@ -54,7 +54,7 @@ class Handler(BaseHTTPRequestHandler):
                 log(f"[http] {method} https://{host}{path}"
                     + (f"?{query}" if query else ""))
             if bracky_site.owns(path):
-                # The public Project Bracky site. Checked first: it is matched
+                # The public Bracky site. Checked first: it is matched
                 # by exact path, so it cannot shadow the game's own routes.
                 status, headers, out = bracky_site.handle(method, path, query,
                                                             self.headers, body, log)
