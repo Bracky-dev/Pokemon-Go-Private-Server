@@ -45,15 +45,32 @@ DEFAULTS = {
         # affected; the true catch odds below are untouched. Lower it for snappier
         # break-outs, raise it (toward 1.0) for longer ones.
         "min_shake_probability": 0.7,
-        # OFF, and best left off on this build: the Nice/Great/Excellent tier
-        # already comes from the RING size the client reports at the moment the
-        # ball lands, so hitting the circle is what earns the bonus -- a miss sends
-        # a loose ring and scores nothing. Turning this on adds a SECOND gate on
-        # normalized_hit_position, but this client reports ~99% of tight throws as
-        # "in circle" regardless of where the ball went, so it only ends up
-        # withholding bonuses from good throws. Left here (with its sense/tolerance)
-        # only in case a different client actually populates hit_position.
-        "require_ball_in_circle": False,
+        # Ring size needed for each throw bonus, and how much spin counts as a
+        # curveball. ZERO means "use the game master", which is what you want:
+        # the client reads these same numbers out of ENCOUNTER_SETTINGS to decide
+        # which banner to draw, so taking them from anywhere else lets it shout
+        # "Excellent!" while the server quietly pays Great.
+        # Stock 2016 values are spin 0.5, excellent 1.7, great 1.3, nice 1.0.
+        # To make an Excellent genuinely harder, edit ExcellentThrowThreshold in
+        # the game master so the client agrees; set a number here only if you
+        # deliberately want the server to disagree with the banner.
+        "reticle_nice": 0,
+        "reticle_great": 0,
+        "reticle_excellent": 0,
+        "spin_bonus_threshold": 0,
+        # ON: a bonus needs the ball to land IN the ring, not merely to hit the
+        # Pokemon while the ring happened to be small.
+        #
+        # normalized_hit_position is a FLAG on this build, only ever 0.0 or 1.0:
+        #     1.0 = the ball landed INSIDE the ring   -> bonus earned
+        #     0.0 = it missed the circle              -> no bonus
+        # so throw_accuracy_sense must stay center_is_one.
+        #
+        # Without this gate the tier comes from the ring size alone, so holding
+        # for a tight ring and throwing wide pays "Excellent" for a ball that
+        # never went near the circle -- confirmed in play, and all 8 Excellents
+        # in the old logs were that (ring 1.70..1.88 with hitpos=0.0).
+        "require_ball_in_circle": True,
         "throw_accuracy_sense": "center_is_zero",   # or "center_is_one"
         "throw_accuracy_tolerance": 0.5,
     },
@@ -263,10 +280,10 @@ DEFAULTS = {
         # false. Default false = the proven JSON login. Test on a throwaway account.
         "custom_login_page": False,
         # How the server shows itself when you start the exe:
-        #   "windstock" = the Project Windstock window (status, activity, buttons)
+        #   "bracky" = the Project Bracky window (status, activity, buttons)
         #   "console"   = the old plain black console window, raw text only
         # Takes effect the NEXT time the server is started.
-        "window": "windstock",
+        "window": "bracky",
     },
 }
 
@@ -330,10 +347,18 @@ _README = [
     "                          Strong Pokemon resist more; Great/Ultra Balls,",
     "                          good throws and Razz Berries all help.",
     "   flee_chance .......... chance it runs away after breaking out",
-    "   require_ball_in_circle  true = Nice/Great/Excellent also need the ball to",
-    "                          land in the ring, not just a small ring at throw",
-    "                          time. Check the hitpos= values in the log and set",
-    "                          throw_accuracy_sense to match before enabling.",
+    "   reticle_nice/great/excellent, spin_bonus_threshold",
+    "                          0 = take them from the game master, which is what",
+    "                          the client itself reads. Set one only to make the",
+    "                          server disagree with the banner on purpose; to",
+    "                          really make Excellent harder, edit the game",
+    "                          master's ExcellentThrowThreshold instead.",
+    "   require_ball_in_circle  ON. A bonus needs the ball to land IN the ring,",
+    "                          not just to hit the Pokemon while the ring was",
+    "                          small. This client sends hit_position as 0.0 (in",
+    "                          the ring) or 1.0 (clipped it outside), so leave",
+    "                          throw_accuracy_sense on center_is_zero. Off = edge",
+    "                          clips score Nice/Great again.",
     "",
     " eggs",
     "   drop_chance .......... how often a PokeStop hands you an egg (0-1)",
@@ -383,7 +408,7 @@ _README = [
     "",
     "server:",
     "   world_manager_port ... the http://127.0.0.1:PORT control panel",
-    "   window ............... 'windstock' = the server window, 'console' = the",
+    "   window ............... 'bracky' = the server window, 'console' = the",
     "                          old black console window (applies on next start)",
     "====================================================================",
 ]

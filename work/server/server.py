@@ -14,7 +14,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import helpcenter
-import windstock_site
+import bracky_site
 import rpc
 import shop
 import sso
@@ -53,10 +53,10 @@ class Handler(BaseHTTPRequestHandler):
             if not path.startswith("/plfe"):
                 log(f"[http] {method} https://{host}{path}"
                     + (f"?{query}" if query else ""))
-            if windstock_site.owns(path):
-                # The public Project Windstock site. Checked first: it is matched
+            if bracky_site.owns(path):
+                # The public Project Bracky site. Checked first: it is matched
                 # by exact path, so it cannot shadow the game's own routes.
-                status, headers, out = windstock_site.handle(method, path, query,
+                status, headers, out = bracky_site.handle(method, path, query,
                                                             self.headers, body, log)
             elif path.startswith("/shop"):
                 # Checked before the host, so the Help Center can use the shop's

@@ -8,7 +8,7 @@ Shared look for the web pages this server serves:
 The two PHONE pages (shop, help) are dressed as Pokemon GO itself -- white rounded
 cards on a blue-green map wash -- so they don't read as a different program bolted
 onto the game. The World Manager runs only on this PC, is never seen inside the
-game, and is a control panel, so it wears the Project Windstock identity instead:
+game, and is a control panel, so it wears the Project Bracky identity instead:
 a clean royal-blue admin dashboard.
 
 Each page keeps its own <style> for what is genuinely its own (the map, the shop's
@@ -61,13 +61,13 @@ img{max-width:100%}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 """
 
-# The World Manager -- Project Windstock admin dashboard, sized for a desktop
+# The World Manager -- Project Bracky admin dashboard, sized for a desktop
 # browser. Self-contained (its own :root). The variable NAMES match what admin.py's
 # inline map CSS reads (--line, --ink, --soft, --r-sm, --shadow, --font, --mono, ...)
 # so re-theming here needs no change there.
 CSS = r"""
 :root{
-  /* Windstock -- royal blue brand on a cool neutral shell */
+  /* Bracky -- royal blue brand on a cool neutral shell */
   --brand:#2358d8; --brand-dk:#173f9e; --brand-lt:#4c7bf0;
   --ink:#172236; --ink2:#586074; --ink3:#8b93a6;
   --bg:#eaeef6; --card:#ffffff; --soft:#f3f6fc; --line:#e4e9f2;

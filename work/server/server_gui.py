@@ -1,8 +1,8 @@
 """
-Project Windstock -- the game server's own window.
+Project Bracky -- the game server's own window.
 
 Replaces the old black console: same look as PoGO-Manager (clam theme, labelled
-sections, status dots, dark activity pane), branded Windstock. The server itself
+sections, status dots, dark activity pane), branded Bracky. The server itself
 is unchanged -- run.main() runs on a background thread and everything it prints
 goes to the log file AND this window.
 
@@ -30,9 +30,28 @@ sys.path.insert(0, BASE)
 import run  # noqa: E402  (after sys.path is set)
 
 BRAND_DIR = os.path.join(BASE, "brand")
-BLUE = "#0b44a8"          # the Windstock logo blue
+BLUE = "#0b44a8"          # the Bracky logo blue
 DOT_OK, DOT_BAD, DOT_WAIT = "#2ecc71", "#e74c3c", "#888888"
 MAX_LOG_LINES = 3000
+GOLD = "#ffd24a"
+
+# ---- easter egg --------------------------------------------------------------
+# Type the magic word anywhere in the window (no text box needed) and the
+# header rides out a Bracky Storm for a few seconds.
+EGG_WORD = "BRACKY"
+EGG_ART = r"""
+        .-.                   _____________________________
+       (   ).                 |                             |
+      (___(__)                |   P R O J E C T             |
+   ,--,   ,--,     /\_/\      |   B R A C K Y               |
+    ',    ',      ( o.o )     |   -- storm warning --       |
+      '     '      > ^ <      |_____________________________|
+"""
+EGG_LINES = [
+    "⚡ Thanks for finding my easter egg!",
+    "⚡ A Bracky Storm rolls in over the server…",
+    "⚡ Somewhere, a Pikachu is very pleased with itself.",
+]
 
 
 # ---- friendly activity ------------------------------------------------------
@@ -407,12 +426,16 @@ class ServerWindow:
         self.server_alive = True
         self._images = []                      # keep PhotoImages alive
 
-        root.title("Project Windstock \u2014 Pok\u00e9mon GO Server")
+        root.title("Project Bracky \u2014 Pok\u00e9mon GO Server")
         root.geometry("860x680")
         root.minsize(720, 540)
         self._set_icon()
         self._build()
         root.protocol("WM_DELETE_WINDOW", self.stop)
+
+        self._egg_buf = ""
+        self._egg_on = False
+        root.bind_all("<KeyPress>", self._egg_key)
 
         threading.Thread(target=self._run_server, daemon=True).start()
         threading.Thread(target=self._poll_loop, daemon=True).start()
@@ -429,11 +452,11 @@ class ServerWindow:
             return None
 
     def _set_icon(self):
-        ico = os.path.join(BRAND_DIR, "windstock.ico")
+        ico = os.path.join(BRAND_DIR, "bracky.ico")
         try:
             self.root.iconbitmap(default=ico)
         except Exception:
-            icon = self._img("windstock_icon.png")
+            icon = self._img("bracky_icon.png")
             if icon:
                 self.root.iconphoto(True, icon)
 
@@ -450,13 +473,14 @@ class ServerWindow:
         # header banner
         head = tk.Frame(self.root, bg="white", highlightthickness=0)
         head.pack(fill="x")
-        mark = self._img("windstock_mark.png")
+        mark = self._img("bracky_mark.png")
         if mark:
             tk.Label(head, image=mark, bg="white").pack(side="left", padx=(10, 8), pady=6)
         titles = tk.Frame(head, bg="white")
         titles.pack(side="left", pady=6)
-        tk.Label(titles, text="PROJECT WINDSTOCK", bg="white", fg=BLUE,
-                 font=("Segoe UI", 18, "bold")).pack(anchor="w")
+        self.title_lbl = tk.Label(titles, text="PROJECT BRACKY", bg="white", fg=BLUE,
+                                  font=("Segoe UI", 18, "bold"))
+        self.title_lbl.pack(anchor="w")
         tk.Label(titles, text="Pok\u00e9mon GO 0.29 / 0.35 private server",
                  bg="white", fg="#556", font=("Segoe UI", 10)).pack(anchor="w")
         self.state_lbl = tk.Label(head, text="\u25CF Starting\u2026", bg="white",
@@ -527,6 +551,7 @@ class ServerWindow:
         self.log.pack(side="left", fill="both", expand=True)
         self.log.tag_configure("warn", foreground="#ffb4a8")
         self.log.tag_configure("time", foreground="#6f8399")
+        self.log.tag_configure("egg", foreground=GOLD, font=("Consolas", 9, "bold"))
 
         self.status = ttk.Label(self.root, text="", anchor="w", relief="sunken")
         self.status.pack(fill="x", side="bottom")
@@ -637,6 +662,53 @@ class ServerWindow:
         if not keep:
             self.lines.clear()
 
+    # ---- easter egg ----
+    def _egg_key(self, event):
+        """Watch every keystroke for the magic word (case-insensitive)."""
+        ch = event.char
+        if not ch or not ch.isalpha():
+            return
+        self._egg_buf = (self._egg_buf + ch.upper())[-len(EGG_WORD):]
+        if self._egg_buf == EGG_WORD and not self._egg_on:
+            self._egg_buf = ""
+            self._storm()
+
+    def _banner(self, text, tag="egg"):
+        """Write straight into the activity pane, raw-log filter and all."""
+        at_end = self.log.yview()[1] > 0.98
+        self.log.configure(state="normal")
+        self.log.insert("end", text + "\n", tag)
+        self.log.configure(state="disabled")
+        if at_end:
+            self.log.see("end")
+
+    def _storm(self):
+        self._egg_on = True
+        up = int(time.time() - self.started)
+        h, m = divmod(up // 60, 60)
+        self._banner(EGG_ART)
+        for line in EGG_LINES:
+            self._banner("   " + line)
+        self._banner(f"   ⚡ Up {h}h {m:02d}m  ·  {len(self.human.seen)} trainer(s)"
+                     f" seen  ·  {len(self.lines)} things logged")
+        self._banner("")
+        self._egg_saved = (self.state_lbl.cget("text"), self.state_lbl.cget("fg"))
+        self._flash(0)
+
+    def _flash(self, n):
+        """Rock the header for ~5 s, then put everything back."""
+        colours = ["#ffd24a", "#ff7ad9", "#5ad1ff", "#8bf07a", BLUE]
+        if n >= 25:
+            self.state_lbl.configure(text=self._egg_saved[0], fg=self._egg_saved[1])
+            self.title_lbl.configure(fg=BLUE)
+            self._egg_on = False
+            return
+        c = colours[n % len(colours)]
+        self.title_lbl.configure(fg=c)
+        self.state_lbl.configure(
+            text="⚡ BRACKY STORM" if n % 2 == 0 else "● BRACKY STORM", fg=c)
+        self.root.after(200, self._flash, n + 1)
+
     # ---- actions ----
     def copy_ip(self):
         self.root.clipboard_clear()
@@ -681,7 +753,7 @@ def window_style():
         import settings as _cfg
         return str(_cfg.get("server", "window")).strip().lower()
     except Exception:
-        return "windstock"
+        return "bracky"
 
 
 def main():

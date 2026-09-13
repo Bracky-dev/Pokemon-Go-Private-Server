@@ -61,7 +61,7 @@ work/server/*.spec
 # ----------------------------------------------------------------------------
 *.png
 work/*.png
-# ...except our own Windstock artwork, which the server window needs.
+# ...except our own Bracky artwork, which the server window needs.
 !work/server/brand/*.png
 
 # Local tooling config (not part of the project)

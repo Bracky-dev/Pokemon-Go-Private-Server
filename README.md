@@ -116,7 +116,7 @@ The client talks HTTPS + Protocol Buffers to `pgorelease.nianticlabs.com` and
 | Protobuf codec | `work/server/pb.py` | Hand-written protobuf reader/writer (no `protoc`) |
 | World state | `work/server/world.py` | Per-account inventory, Pokémon and XP, plus shared gyms, saved to disk |
 | Game data | `work/server/gamedata.py`, `settings.py` | Stats, moves, types; hot-reloaded tuning in `settings.json` |
-| Shop / Help / Site | `work/server/shop.py`, `helpcenter.py`, `windstock_site.py` | In-game store, support pages, status site |
+| Shop / Help / Site | `work/server/shop.py`, `helpcenter.py`, `bracky_site.py` | In-game store, support pages, status site |
 | World Manager | `work/server/webui.py`, `admin.py` | Local web UI for stops, gyms, events and POIs |
 | Launcher | `work/server/run.py` | Runs the DNS and game server (plus bridges) in one process |
 | Game master converter | `work/tools/convert_gm.py` | Rebuilds the 2016 GAME_MASTER into 0.29 item templates |

@@ -47,7 +47,7 @@ Snorlax Articuno Zapdos Moltres Dratini Dragonair Dragonite Mewtwo Mew""".split(
 
 PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Windstock &mdash; World Manager</title>
+<title>Bracky &mdash; World Manager</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>__CSS__
  /* --- World Manager only ------------------------------------------- */
@@ -74,7 +74,7 @@ PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
       <path d="M5 6.6 L20 9 L20 13 L5 15.4 Z" fill="#fff"/>
       <path d="M10 7.3v6.9M14.4 7.9v5.6" stroke="#2358d8" stroke-width="1.4" stroke-linecap="round"/>
     </svg></div>
-    <div class="word"><h1>Windstock</h1><small>World Manager</small></div>
+    <div class="word"><h1>Bracky</h1><small>World Manager</small></div>
   </div>
   <nav class="topnav"><a class="active" href="/">Manager</a><a href="/downloads">World Data</a></nav>
   <div class="spacer"></div>
@@ -531,7 +531,7 @@ class _Handler(BaseHTTPRequestHandler):
                 # coins. Drops a real, spinnable stop at the trainer's location
                 # (their home/business), which is what a rural player with no
                 # nearby OSM stops needs. Names it after the nearest OSM place if
-                # there is one within ~250 m, else a plain Windstock stop.
+                # there is one within ~250 m, else a plain Bracky stop.
                 import world, contextlib as _ctx, rpc as _rpc, math as _math
                 who = (d.get("player") or "").strip()
                 cost = int(d.get("cost", 1000))
@@ -568,9 +568,9 @@ class _Handler(BaseHTTPRequestHandler):
                                 dm = _math.hypot(dx, dy)
                                 if dm < bestd:
                                     best, bestd = f["name"], dm
-                            name = best or "Windstock Stop"
+                            name = best or "Bracky Stop"
                         except Exception:
-                            name = "Windstock Stop"
+                            name = "Bracky Stop"
                     fort = PL.add_fort(lat, lng, "stop", name[:40])
                     price = "free" if charged == 0 else f"{charged}c"
                     return self._json({"ok": True, "coins": world.COINS,

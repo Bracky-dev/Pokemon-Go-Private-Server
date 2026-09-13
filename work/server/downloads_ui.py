@@ -1,6 +1,6 @@
 """
 The World Data pages for the World Manager: download real PokeStops + Gyms for a
-country (or a US state) from OpenStreetMap. Same Windstock dashboard skin as the
+country (or a US state) from OpenStreetMap. Same Bracky dashboard skin as the
 manager (webui.CSS via __CSS__). Backend lives in poidownload.py.
 """
 import json
@@ -19,7 +19,7 @@ _HEAD = r"""<!doctype html><html lang="en"><head><meta charset="utf-8">
       <path d="M5 6.6 L20 9 L20 13 L5 15.4 Z" fill="#fff"/>
       <path d="M10 7.3v6.9M14.4 7.9v5.6" stroke="#2358d8" stroke-width="1.4" stroke-linecap="round"/>
     </svg></div>
-    <div class="word"><h1>Windstock</h1><small>World Manager</small></div>
+    <div class="word"><h1>Bracky</h1><small>World Manager</small></div>
   </div>
   <nav class="topnav"><a href="/">Manager</a><a class="active" href="/downloads">World Data</a></nav>
   <div class="spacer"></div>
