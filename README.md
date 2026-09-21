@@ -1,4 +1,4 @@
-# Pokémon GO 0.29 Private Server
+# Pokémon GO 0.29 and 0.35 Private Server (shoo away from my code kanto)
 
 Pokémon GO private servers let people play the game without Niantic's official servers. They
 recreate the original gameplay, and can add custom features or remove limits the official game
